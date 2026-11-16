@@ -89,7 +89,7 @@ export function Header() {
           style={{ width: PILL_OPEN, opacity: expanded ? 1 : 0, pointerEvents: expanded ? "auto" : "none" }}
         >
           {site.nav.map((link, index) => (
-            <a
+            <Link
               key={link.label}
               href={link.href}
               tabIndex={expanded ? 0 : -1}
@@ -97,7 +97,7 @@ export function Header() {
               style={{ left: 10 + step * (index + 0.5) }}
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </div>
 

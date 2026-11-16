@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { sections, site } from "./content";
 
 type FooterLink = { label: string; href: string };
@@ -27,13 +28,13 @@ export function Footer() {
             <ul className="mt-[11px]">
               {column.links.map((link, index) => (
                 <li key={`${link.label}-${index}`} className="h-[35px]">
-                  <a
+                  <Link
                     href={link.href}
                     className="wl-link block text-[18px] leading-[30px]"
                     {...(isExternal(link.href) ? { target: "_blank", rel: "noopener" } : {})}
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

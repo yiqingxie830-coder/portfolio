@@ -1,4 +1,5 @@
 import { Caveat } from "next/font/google";
+import Link from "next/link";
 import "./portfolio.css";
 import { about } from "./content";
 import type { AboutList, MusicTile } from "./content";
@@ -68,9 +69,9 @@ function ListCard({ list }: { list: AboutList }) {
       <div className="flex items-center justify-between">
         <p className={LABEL}>{list.title}</p>
         {list.action ? (
-          <a href={list.action.href} className={`${LABEL} wl-link`}>
+          <Link href={list.action.href} className={`${LABEL} wl-link`}>
             {list.action.label}
-          </a>
+          </Link>
         ) : null}
       </div>
 
