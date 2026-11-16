@@ -1,0 +1,328 @@
+/* Portfolio template — fonts, colors and motion. Change colors in .wl-root. */
+
+@font-face {
+  font-family: "Inter Display";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/portfolio/fonts/InterDisplay-400-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Inter Display";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/portfolio/fonts/InterDisplay-400-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Inter Display";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/portfolio/fonts/InterDisplay-500-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Inter Display";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/portfolio/fonts/InterDisplay-500-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+.wl-root {
+  --wl-bg: #ffffff;
+  --wl-card: #f5f5f4;
+  --wl-card-border: #e4e4e4;
+  --wl-muted: #6b6d73;
+  --wl-body: #55565a;
+  --wl-heading: #111111;
+  --wl-ease: cubic-bezier(0.44, 0, 0.56, 1);
+  position: relative;
+  min-height: 100vh;
+  overflow-x: clip;
+  background: var(--wl-bg);
+  color: #111;
+  font-family: "Inter Display", "Inter", ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- appear animations ---------- */
+@keyframes wl-appear-fade {
+  from { opacity: 0.001; }
+  to { opacity: 1; }
+}
+@keyframes wl-appear-rise {
+  from { opacity: 0.001; transform: perspective(1200px) translateY(150px); }
+  to { opacity: 1; transform: perspective(1200px) translateY(0); }
+}
+@keyframes wl-appear-drop {
+  from { opacity: 0.001; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.wl-fade-in { animation: wl-appear-fade 1s var(--wl-ease) both; }
+.wl-rise-in { animation: wl-appear-rise 1s var(--wl-ease) both; }
+.wl-drop-in { animation: wl-appear-drop 0.7s cubic-bezier(1, 0.02, 0.69, 1) both; }
+
+.wl-gradient-text {
+  background-image: linear-gradient(0deg, rgb(120, 120, 120) 0%, rgb(17, 17, 17) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.wl-gradient-text-light {
+  background-image: linear-gradient(0deg, rgb(120, 120, 120) 0%, rgb(255, 255, 255) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ---------- hero 3D scene: fades in once loaded ---------- */
+.wl-scene {
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+.wl-scene[data-ready="true"] {
+  opacity: 1;
+}
+
+/* ---------- header nav pill ---------- */
+.wl-pill {
+  transition: width 0.62s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+.wl-pill-links {
+  transition: opacity 0.3s ease;
+}
+
+/* ---------- section heading reveal ---------- */
+.wl-reveal {
+  opacity: 0.001;
+  transition: opacity 1s var(--wl-ease);
+}
+.wl-reveal[data-visible="true"] {
+  opacity: 1;
+}
+
+/* 滚动到才出现：淡入 + 上移 */
+.wl-reveal-up {
+  opacity: 0.001;
+  transform: translateY(44px);
+  transition:
+    opacity 0.8s var(--wl-ease),
+    transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.wl-reveal-up[data-visible="true"] {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .wl-reveal-up {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---------- frosted glass ---------- */
+.wl-glass {
+  background: rgba(233, 233, 231, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 12px 40px rgba(0, 0, 0, 0.04);
+  -webkit-backdrop-filter: blur(30px) saturate(1.2);
+  backdrop-filter: blur(30px) saturate(1.2);
+}
+
+/* 盖在照片上的一层玻璃：左上角斜向柔光 + 边缘高光 */
+.wl-glass-sheen {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: inherit;
+  background:
+    linear-gradient(140deg, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0.1) 30%, rgba(255, 255, 255, 0) 52%),
+    linear-gradient(320deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0) 28%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    inset 0 0 34px rgba(255, 255, 255, 0.16);
+  pointer-events: none;
+}
+
+/* 带颜色的磨砂面：深色底 + --wl-tint 颜色 + 左上角一道柔光 */
+.wl-glass-tinted {
+  background:
+    linear-gradient(140deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.04) 38%, rgba(255, 255, 255, 0) 60%),
+    linear-gradient(var(--wl-tint), var(--wl-tint)),
+    rgba(22, 22, 22, 0.86);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 12px 40px rgba(0, 0, 0, 0.1);
+  -webkit-backdrop-filter: blur(30px) saturate(1.2);
+  backdrop-filter: blur(30px) saturate(1.2);
+}
+
+/* ---------- folder cards ---------- */
+.wl-folder {
+  display: block;
+  width: 340px;
+  text-decoration: none;
+  color: inherit;
+}
+.wl-folder-art {
+  position: relative;
+  height: 280px;
+  perspective: 900px;
+}
+/* 文件夹背板：一整块带左上角标签的形状 */
+.wl-folder-back {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: #dededc;
+  filter: drop-shadow(0 18px 22px rgba(0, 0, 0, 0.06)) drop-shadow(0 6px 8px color-mix(in srgb, var(--wl-accent, transparent) 12%, transparent));
+}
+.wl-folder-paper {
+  position: absolute;
+  left: 26px;
+  right: 26px;
+  top: 44px;
+  height: 170px;
+  padding: 14px 22px 0;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  transition: transform 0.45s cubic-bezier(0.3, 1.3, 0.5, 1);
+}
+/* 折在文件夹里的小图：叠在 logo 纸片前面，悬停时向两边抽出来 */
+.wl-folder-extra {
+  position: absolute;
+  border: 3px solid #fff;
+  border-radius: 14px;
+  object-fit: cover;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
+  transition: transform 0.45s cubic-bezier(0.3, 1.3, 0.5, 1);
+}
+/* 两张叠在文件夹右半边，互相压住一部分，始终不超出文件夹 */
+.wl-folder-extra[data-side="left"] {
+  left: 158px;
+  top: 44px;
+  width: 98px;
+  height: 132px;
+  transform: rotate(-9deg);
+}
+.wl-folder-extra[data-side="right"] {
+  left: 222px;
+  top: 52px;
+  width: 98px;
+  height: 132px;
+  transform: rotate(6deg);
+}
+.wl-folder-front {
+  position: absolute;
+  inset: 142px 0 0 0;
+  border-radius: 28px;
+  transform-origin: bottom center;
+  transition: transform 0.45s cubic-bezier(0.3, 1.3, 0.5, 1);
+}
+/* logo 颜色在磨砂面上的一点反光：从上沿往下淡出 */
+.wl-folder-front::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(60% 34% at 50% 0%, color-mix(in srgb, var(--wl-accent, transparent) 20%, transparent) 0%, transparent 100%);
+  pointer-events: none;
+}
+.wl-folder:hover .wl-folder-paper,
+.wl-folder:focus-visible .wl-folder-paper {
+  transform: translateY(-20px) rotate(-2deg);
+}
+.wl-folder:hover .wl-folder-extra[data-side="left"],
+.wl-folder:focus-visible .wl-folder-extra[data-side="left"] {
+  transform: translate(-12px, -4px) rotate(-13deg);
+}
+.wl-folder:hover .wl-folder-extra[data-side="right"],
+.wl-folder:focus-visible .wl-folder-extra[data-side="right"] {
+  transform: translate(4px, -8px) rotate(9deg);
+}
+.wl-folder:hover .wl-folder-front,
+.wl-folder:focus-visible .wl-folder-front {
+  transform: rotateX(-16deg);
+}
+
+/* ---------- work detail: flow diagram ---------- */
+.wl-flow-highlight {
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--wl-accent, #6b6d73) 70%, transparent);
+}
+
+/* ---------- work detail: back button（朝左的等边三角形） ---------- */
+.wl-back-dot {
+  display: block;
+  width: 14px;
+  height: 16.17px; /* 等边三角形：高 14，边长 14 ÷ 0.866 */
+  background: #2f6bff;
+  clip-path: polygon(0 50%, 100% 0, 100% 100%);
+  transition: transform 0.2s ease;
+}
+.wl-back-dot:hover {
+  transform: translateX(-3px);
+}
+/* 点击后向右（顺时针）转 90 度 */
+.wl-back-dot[data-turning="true"] {
+  transform: rotate(90deg);
+  transition: transform 0.32s cubic-bezier(0.3, 1.3, 0.5, 1);
+}
+
+/* ---------- work detail: glowing card + nudge on press ---------- */
+.wl-glow {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 0 0 1px rgba(255, 255, 255, 0.7),
+    0 0 26px rgba(255, 255, 255, 0.9),
+    0 0 70px color-mix(in srgb, var(--wl-accent, #9aa3b5) 34%, transparent);
+}
+.wl-nudge {
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.25s cubic-bezier(0.3, 1.4, 0.5, 1),
+    box-shadow 0.25s ease;
+}
+.wl-nudge:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+}
+/* 按下时轻轻挪一下 */
+.wl-nudge:active {
+  transform: translate(3px, 4px) rotate(0.8deg) scale(0.985);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ---------- footer links ---------- */
+.wl-link {
+  color: var(--wl-muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.wl-link:hover {
+  color: #000;
+}
+
+/* ---------- placeholders ---------- */
+.wl-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed #cfcfcf;
+  border-radius: 10px;
+  color: #9a9a9a;
+  font-size: 14px;
+  letter-spacing: 1px;
+  text-align: center;
+}
