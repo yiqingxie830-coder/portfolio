@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { PhoneScreen } from "./content";
 import { ToneoMascot } from "./ToneoMascot";
+import { highlight } from "./highlight";
 
 /** 每一页自动停留多久（毫秒） */
 const DWELL = 3600;
@@ -155,7 +156,7 @@ export function PhoneShowcase({
                     <span className="text-[16px] font-medium leading-[22px] text-[#111]">{screen.title}</span>
                     {screen.caption ? (
                       <span className="wl-phone-step-caption text-[14px] leading-[20px] text-[#55565a]">
-                        <span className="min-h-0">{screen.caption}</span>
+                        <span className="min-h-0">{highlight(screen.caption)}</span>
                       </span>
                     ) : null}
                     {isActive && playing ? (

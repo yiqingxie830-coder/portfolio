@@ -9,22 +9,11 @@ import { PhoneShowcase } from "./PhoneShowcase";
 import { useContent } from "./language";
 import { Reveal } from "./Reveal";
 import { ToneoMascot } from "./ToneoMascot";
+import { highlight } from "./highlight";
 
 const LABEL =
   "text-[12px] font-medium leading-[14.4px] tracking-[0.96px] text-[#77787d]";
 
-/** 把 **这样** 包住的文字显示成蓝色，其余原样输出 */
-function highlight(text: string) {
-  return text.split(/\*\*(.+?)\*\*/g).map((part, index) =>
-    index % 2 === 1 ? (
-      <span key={index} className="font-medium text-[#2f6bff]">
-        {part}
-      </span>
-    ) : (
-      part
-    ),
-  );
-}
 
 /** 流程图：每个阶段一列，阶段之间用箭头连接；highlight 的阶段用项目的主色描边 */
 function FlowDiagram({ flow }: { flow: WorkFlow }) {
@@ -36,7 +25,7 @@ function FlowDiagram({ flow }: { flow: WorkFlow }) {
         </h2>
         {flow.caption ? (
           <p className="mt-[8px] max-w-[640px] text-[16px] leading-[23px] text-[#55565a]">
-            {flow.caption}
+            {highlight(flow.caption)}
           </p>
         ) : null}
       </figcaption>
@@ -80,7 +69,7 @@ function FlowDiagram({ flow }: { flow: WorkFlow }) {
                     key={`${item}-${itemIndex}`}
                     className="rounded-[10px] bg-white px-[10px] py-[8px] text-[14px] font-medium leading-[18px] text-[#111] shadow-[0_1px_3px_rgba(0,0,0,0.06)]"
                   >
-                    {item}
+                    {highlight(item)}
                   </li>
                 ))}
               </ul>
@@ -91,7 +80,7 @@ function FlowDiagram({ flow }: { flow: WorkFlow }) {
 
       {flow.footnote ? (
         <p className="mt-[18px] text-[14px] leading-[20px] text-[#6b6d73]">
-          {flow.footnote}
+          {highlight(flow.footnote)}
         </p>
       ) : null}
     </figure>
@@ -149,7 +138,7 @@ export function WorkDetail({ project: initial }: { project: Project }) {
                   {project.concept.quote}
                 </blockquote>
                 <figcaption className="mt-[8px] text-[13px] tracking-[0.3px] text-[#77787d]">— {project.concept.source}</figcaption>
-                <p className="mt-[18px] text-[16px] leading-[27px] text-[#3d3e42]">{project.concept.text}</p>
+                <p className="mt-[18px] text-[16px] leading-[27px] text-[#3d3e42]">{highlight(project.concept.text)}</p>
               </figure>
             </Reveal>
           ) : null}
@@ -170,7 +159,7 @@ export function WorkDetail({ project: initial }: { project: Project }) {
             ) : null}
             {project.intro ? (
               <p className="mt-[14px] max-w-[640px] text-[12px] italic leading-[18px] tracking-[0.3px] text-[#77787d]">
-                {project.intro}
+                {highlight(project.intro)}
               </p>
             ) : null}
           </Reveal>
@@ -220,9 +209,9 @@ export function WorkDetail({ project: initial }: { project: Project }) {
                   className="wl-glass flex flex-col-reverse justify-end rounded-[28px] px-[22px] py-[22px]"
                 >
                   <dt className="mt-[10px] text-[14px] leading-[19px] text-[#6b6d73]">
-                    {stat.label}
+                    {highlight(stat.label)}
                   </dt>
-                  <dd className="text-[40px] font-medium leading-[44px] text-[#111]">
+                  <dd className="text-[40px] font-medium leading-[44px] text-[#2f6bff]">
                     {stat.value}
                   </dd>
                 </div>
