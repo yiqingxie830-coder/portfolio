@@ -1,9 +1,14 @@
+"use client";
+
 import "./portfolio.css";
 import { BackButton } from "./BackButton";
 import type { Project, WorkFlow } from "./content";
 import { Footer } from "./Footer";
 import { Header } from "./Header";
+import { PhoneShowcase } from "./PhoneShowcase";
+import { useContent } from "./language";
 import { Reveal } from "./Reveal";
+import { ToneoMascot } from "./ToneoMascot";
 
 const LABEL =
   "text-[12px] font-medium leading-[14.4px] tracking-[0.96px] text-[#77787d]";
@@ -24,9 +29,9 @@ function highlight(text: string) {
 /** 流程图：每个阶段一列，阶段之间用箭头连接；highlight 的阶段用项目的主色描边 */
 function FlowDiagram({ flow }: { flow: WorkFlow }) {
   return (
-    <figure className="wl-glass rounded-[28px] px-[30px] py-[28px]">
+    <figure className="wl-glass rounded-[28px] px-[18px] py-[22px] min-[1015px]:px-[30px] min-[1015px]:py-[28px]">
       <figcaption>
-        <h2 className="text-[24px] font-medium leading-[30px] text-[#111]">
+        <h2 className="text-[20px] font-medium leading-[26px] text-[#111] min-[1015px]:text-[24px] min-[1015px]:leading-[30px]">
           {flow.title}
         </h2>
         {flow.caption ? (
@@ -42,7 +47,7 @@ function FlowDiagram({ flow }: { flow: WorkFlow }) {
           <img
             src={flow.image.src}
             alt={flow.image.alt}
-            className="mx-auto block h-auto w-[70%] mix-blend-multiply"
+            className="mx-auto block h-auto w-full mix-blend-multiply min-[1015px]:w-[70%]"
           />
         </div>
       ) : null}
@@ -94,7 +99,10 @@ function FlowDiagram({ flow }: { flow: WorkFlow }) {
 }
 
 /** 文件夹点进去之后的详情页 */
-export function WorkDetail({ project }: { project: Project }) {
+export function WorkDetail({ project: initial }: { project: Project }) {
+  // 页面传进来的是英文版；这里按当前语言换成对应的那一份
+  const { allProjects } = useContent();
+  const project = allProjects.find((item) => item.slug === initial.slug) ?? initial;
   return (
     <div
       className="wl-root"
@@ -105,11 +113,20 @@ export function WorkDetail({ project }: { project: Project }) {
       }
     >
       <Header />
-      <main className="pt-[48px] min-[1015px]:pt-[130px]">
+      <main className="pt-[92px] min-[1015px]:pt-[130px]">
         <div className="mx-auto w-[min(860px,calc(100%-32px))]">
           <BackButton href="/#experience" />
 
-          {project.logo ? (
+          {project.mascot === "toneo" ? (
+            <Reveal className="mt-[28px]">
+              <div className="flex items-center gap-[6px]" style={project.logoShift ? { marginLeft: project.logoShift } : undefined}>
+                <ToneoMascot size={104} label={project.title} />
+                <span className="text-[44px] font-bold leading-none tracking-[-1.5px] text-[#1a1a1c]" aria-hidden="true">
+                  {project.title}
+                </span>
+              </div>
+            </Reveal>
+          ) : project.logo ? (
             <Reveal className="mt-[36px]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -122,6 +139,18 @@ export function WorkDetail({ project }: { project: Project }) {
                     : undefined
                 }
               />
+            </Reveal>
+          ) : null}
+
+          {project.concept ? (
+            <Reveal className="mt-[32px]" delay={80}>
+              <figure className="max-w-[680px]">
+                <blockquote className="text-[22px] italic leading-[32px] text-[#1a1a1c] min-[1015px]:text-[26px] min-[1015px]:leading-[38px]">
+                  {project.concept.quote}
+                </blockquote>
+                <figcaption className="mt-[8px] text-[13px] tracking-[0.3px] text-[#77787d]">— {project.concept.source}</figcaption>
+                <p className="mt-[18px] text-[16px] leading-[27px] text-[#3d3e42]">{project.concept.text}</p>
+              </figure>
             </Reveal>
           ) : null}
 
@@ -163,13 +192,25 @@ export function WorkDetail({ project }: { project: Project }) {
           ) : null}
 
           {project.feature ? (
-            <Reveal className="mb-[80px] mt-[80px] flex justify-center" delay={280}>
+            <Reveal className="mb-[44px] mt-[44px] flex justify-center min-[1015px]:mb-[80px] min-[1015px]:mt-[80px]" delay={280}>
               <a href={project.feature.href} target="_blank" rel="noopener" className="wl-nudge block w-full overflow-hidden rounded-[22px]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={project.feature.src} alt={project.feature.alt} className="block h-auto w-full" />
               </a>
             </Reveal>
           ) : null}
+
+          {project.screens?.length ? (
+            <Reveal className="mt-[48px]" delay={200}>
+              <PhoneShowcase screens={project.screens} title={project.title} heading={project.screensTitle} />
+            </Reveal>
+          ) : null}
+
+          {project.moreShowcases?.map((group) => (
+            <Reveal key={group.title} className="mt-[16px]" delay={200}>
+              <PhoneShowcase screens={group.screens} title={group.title} heading={group.title} />
+            </Reveal>
+          ))}
 
           {project.stats?.length ? (
             <dl className="mt-[48px] grid grid-cols-2 gap-[10px] min-[1015px]:grid-cols-4">
@@ -192,7 +233,7 @@ export function WorkDetail({ project }: { project: Project }) {
           {project.flows?.length ? (
             <div className="mt-[38px] flex flex-col gap-[10px]">
               {project.flows.map((flow, index) => (
-                <Reveal key={flow.title} delay={280 + Math.min(index, 2) * 140}>
+                <Reveal key={index} delay={280 + Math.min(index, 2) * 140}>
                   <FlowDiagram flow={flow} />
                 </Reveal>
               ))}
@@ -204,12 +245,12 @@ export function WorkDetail({ project }: { project: Project }) {
           ) : null}
           <div
             className={`${project.detailsTitle ? "mt-[14px]" : "mt-[48px]"} ${
-              project.detailsInRow ? "grid grid-cols-2 gap-[10px] min-[1015px]:grid-cols-4" : "flex flex-col gap-[10px]"
+              project.detailsInRow ? "grid grid-cols-1 gap-[10px] min-[560px]:grid-cols-2 min-[1015px]:grid-cols-4" : "flex flex-col gap-[10px]"
             }`}
           >
             {project.details.map((detail, index) => (
               <Reveal
-                key={detail.heading}
+                key={index}
                 delay={(project.flows?.length ? 0 : 280) + Math.min(index, 3) * 140}
               >
                 <section
@@ -218,7 +259,7 @@ export function WorkDetail({ project }: { project: Project }) {
                       ? "wl-glass h-full rounded-[24px] px-[18px] py-[20px]"
                       : detail.plain
                         ? "py-[28px]"
-                        : `wl-glass rounded-[28px] px-[30px] py-[26px] ${detail.images?.length ? "wl-glow" : ""}`
+                        : `wl-glass rounded-[28px] px-[20px] py-[22px] min-[1015px]:px-[30px] min-[1015px]:py-[26px] ${detail.images?.length ? "wl-glow" : ""}`
                   }
                 >
                   <h2
@@ -234,17 +275,24 @@ export function WorkDetail({ project }: { project: Project }) {
                     className={
                       project.detailsInRow
                         ? "mt-[10px] text-[16px] leading-[22px] text-[#55565a]"
-                        : "mt-[10px] text-[18px] leading-[26px] text-[#55565a]"
+                        : "mt-[10px] text-[17px] leading-[25px] text-[#55565a] min-[1015px]:text-[18px] min-[1015px]:leading-[26px]"
                     }
                   >
                     {highlight(detail.text)}
                   </p>
                   {detail.images?.length ? (
                     <div className="mt-[22px] flex flex-wrap items-start justify-center gap-[12px]">
-                      {detail.images.map((image) => (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img key={image.src} src={image.src} alt={image.alt} className="wl-nudge h-[300px] w-auto max-w-full rounded-[18px] object-contain" />
-                      ))}
+                      {detail.images.map((image) =>
+                        image.href ? (
+                          <a key={image.src} href={image.href} target="_blank" rel="noopener" className="wl-nudge block max-w-full overflow-hidden rounded-[18px]">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={image.src} alt={image.alt} className="block h-auto max-h-[300px] w-auto max-w-full min-[1015px]:h-[300px] object-contain" />
+                          </a>
+                        ) : (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img key={image.src} src={image.src} alt={image.alt} className="wl-nudge h-auto max-h-[300px] w-auto max-w-full min-[1015px]:h-[300px] rounded-[18px] object-contain" />
+                        ),
+                      )}
                     </div>
                   ) : null}
                 </section>
@@ -253,7 +301,7 @@ export function WorkDetail({ project }: { project: Project }) {
           </div>
         </div>
 
-        <div className="mt-[140px] hidden min-[1015px]:block">
+        <div className="mt-[100px] min-[1015px]:mt-[140px]">
           <Reveal>
             <Footer />
           </Reveal>

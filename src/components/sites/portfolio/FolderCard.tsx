@@ -9,7 +9,7 @@ export function FolderCard({ project }: { project: Project }) {
   return (
     <Link
       href={project.externalHref ?? `/work/${project.slug}`}
-      {...(project.externalHref ? { target: "_blank", rel: "noopener" } : {})}
+      {...(project.externalHref ? { target: "_blank", rel: "noopener" } : { transitionTypes: ["nav-forward"] })}
       className="wl-folder"
       style={project.accent ? ({ "--wl-accent": project.accent } as React.CSSProperties) : undefined}
     >

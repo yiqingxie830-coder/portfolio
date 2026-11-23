@@ -9,10 +9,15 @@ type Props = {
   delay?: number;
 };
 
-/** 滚动到视口里才出现：淡入 + 从下方上移。只播放一次。 */
+type Phase = "hidden" | "shown" | "instant";
+
+/**
+ * 滚动到视口里才出现：淡入 + 从下方上移。只播放一次。
+ * 如果元素一开始就在视口上方（例如从详情页返回到页面中段），直接显示，不再补播动画。
+ */
 export function Reveal({ children, className = "", delay = 0 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
+  const [phase, setPhase] = useState<Phase>("hidden");
 
   useEffect(() => {
     const el = ref.current;
@@ -20,7 +25,10 @@ export function Reveal({ children, className = "", delay = 0 }: Props) {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setVisible(true);
+          setPhase("shown");
+          observer.disconnect();
+        } else if (entry.boundingClientRect.bottom < 0) {
+          setPhase("instant");
           observer.disconnect();
         }
       },
@@ -33,7 +41,8 @@ export function Reveal({ children, className = "", delay = 0 }: Props) {
   return (
     <div
       ref={ref}
-      data-visible={visible}
+      data-visible={phase !== "hidden"}
+      data-instant={phase === "instant"}
       className={`wl-reveal-up ${className}`}
       style={delay ? { transitionDelay: `${delay}ms` } : undefined}
     >
