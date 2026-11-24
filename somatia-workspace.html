@@ -1,0 +1,316 @@
+<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>SOMATIA Workspace</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a speculative 2031 product screen. Header, then one app window (care team | model | design brief), then presenter controls. Stacks to one column on phones. */
+:root{
+  --ground:#E9EEF5; --win:#F8F9FB; --panel:#FFFFFF; --line:#D5DDE7; --ink:#0B1F3A; --text:#3E4C5C; --muted:#6A7685;
+  --blue:#2563A8; --blue-soft:#DCE8F7; --coral:#C25A40; --coral-soft:#F8E1D9; --ok:#1F7A5C; --ok-soft:#DDF0E8; --gray-soft:#E4E8EE;
+  --model:#C9D3DF; --model-line:#9AA8B8;
+  --display:'Source Serif 4', Georgia, serif; --body:'IBM Plex Sans', Arial, sans-serif; --mono:'IBM Plex Mono', 'Courier New', monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --ground:#08111F; --win:#0E1A2C; --panel:#13233A; --line:#24364F; --ink:#EEF2F8; --text:#BFCBDB; --muted:#8C9AAD;
+  --blue:#6FA6E6; --blue-soft:#1A3354; --coral:#EE9277; --coral-soft:#3A2420; --ok:#5CC79E; --ok-soft:#14322A; --gray-soft:#1B2B42;
+  --model:#2B3E58; --model-line:#4A607E; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --ground:#08111F; --win:#0E1A2C; --panel:#13233A; --line:#24364F; --ink:#EEF2F8; --text:#BFCBDB; --muted:#8C9AAD;
+  --blue:#6FA6E6; --blue-soft:#1A3354; --coral:#EE9277; --coral-soft:#3A2420; --ok:#5CC79E; --ok-soft:#14322A; --gray-soft:#1B2B42;
+  --model:#2B3E58; --model-line:#4A607E; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.5}
+.page{max-width:1280px;margin:0 auto;padding-inline:clamp(16px,3vw,40px);padding-block:36px 56px;display:flex;flex-direction:column;gap:24px}
+.intro{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:16px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--coral)}
+h1{font-family:var(--display);font-weight:600;color:var(--ink);font-size:clamp(30px,4vw,44px);line-height:1.1;margin:6px 0 6px;text-wrap:balance}
+.intro p{margin:0;max-width:62ch}
+.hint{font-family:var(--mono);font-size:12px;color:var(--muted)}
+
+/* app window */
+.win{background:var(--win);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 18px 50px rgba(11,31,58,.12)}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;padding:12px 18px;border-bottom:1px solid var(--line);background:var(--panel)}
+.brand{font-family:var(--mono);font-size:13px;letter-spacing:.14em;color:var(--blue);font-weight:500}
+.crumb{font-size:14px;color:var(--muted)}
+.crumb b{color:var(--ink);font-weight:600}
+.bar .spacer{flex:1}
+.pill{font-family:var(--mono);font-size:12px;padding:4px 10px;border-radius:99px;border:1px solid var(--line);white-space:nowrap}
+.pill.hold{background:var(--coral-soft);color:var(--coral);border-color:transparent}
+.pill.run{background:var(--blue-soft);color:var(--blue);border-color:transparent}
+.pill.ok{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.pill.idle{color:var(--muted)}
+.cols{display:grid;grid-template-columns:260px minmax(0,1fr) 360px}
+@media (max-width:1060px){.cols{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.team{grid-column:1/-1;border-right:none!important;border-bottom:1px solid var(--line)}}
+@media (max-width:700px){.cols{grid-template-columns:minmax(0,1fr)}.viewer{border-right:none!important;border-bottom:1px solid var(--line)}}
+.col{padding:18px;min-width:0;display:flex;flex-direction:column;gap:14px}
+.team,.viewer{border-right:1px solid var(--line)}
+.colhead{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;gap:8px}
+
+/* care team */
+.people{display:flex;flex-direction:column;gap:8px;list-style:none;margin:0;padding:0}
+@media (max-width:1060px){.people{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}}
+.person{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:10px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 10px;transition:border-color .3s,background .3s}
+.av{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-family:var(--mono);font-size:12px;font-weight:500;background:var(--gray-soft);color:var(--ink)}
+.person .nm{color:var(--ink);font-weight:600;font-size:14px;line-height:1.2}
+.person .rl{color:var(--muted);font-size:12.5px;line-height:1.3}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.person[data-s="active"]{border-color:var(--blue)} .person[data-s="active"] .dot{background:var(--blue)}
+.person[data-s="asked"]{border-color:var(--coral);background:var(--coral-soft)} .person[data-s="asked"] .dot{background:var(--coral);animation:pulse 1.4s infinite}
+.person[data-s="answered"] .dot{background:var(--ok)}
+.person[data-s="done"] .dot{background:var(--ok)}
+@keyframes pulse{50%{box-shadow:0 0 0 6px transparent}0%{box-shadow:0 0 0 0 var(--coral)}}
+.note{font-size:13px;color:var(--muted);margin:0}
+
+/* viewer */
+.stage{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:12px;min-height:380px;display:grid;place-items:center;overflow:hidden}
+.stage .grid{position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:28px 28px;opacity:.45}
+.stage svg{position:relative;width:min(240px,60%);height:auto;max-width:100%}
+.tool{position:absolute;top:12px;left:12px;font-family:var(--mono);font-size:12px;background:var(--win);border:1px solid var(--line);border-radius:6px;padding:4px 8px;color:var(--ink)}
+.marker{position:absolute;font-size:12.5px;line-height:1.3;background:var(--panel);border:1.5px solid var(--coral);color:var(--ink);border-radius:8px;padding:6px 9px;max-width:180px;transition:opacity .4s}
+.marker b{color:var(--coral);font-family:var(--mono);font-size:11px;letter-spacing:.06em;display:block}
+.m1{right:12px;top:38%} .m2{left:12px;bottom:16%}
+.conf{display:flex;flex-direction:column;gap:6px}
+.conf .row{display:flex;justify-content:space-between;gap:10px;font-size:13px}
+.conf .row b{color:var(--ink)}
+.meter{height:10px;border-radius:99px;background:var(--gray-soft);overflow:hidden}
+.meter i{display:block;height:100%;width:0;border-radius:99px;background:var(--model-line);transition:width .8s ease,background .4s}
+.feed{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:13px}
+.feed li{display:grid;grid-template-columns:52px minmax(0,1fr);gap:8px}
+.feed time{font-family:var(--mono);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.feed li.new{animation:in .5s ease}
+@keyframes in{from{opacity:0;transform:translateY(4px)}}
+
+/* svg model states */
+.socket .body{fill:var(--panel);stroke:var(--model-line);stroke-width:2;stroke-dasharray:6 6;transition:fill .6s}
+.socket .rim{fill:none;stroke:var(--model-line);stroke-width:2;stroke-dasharray:6 6}
+.socket .mesh{stroke:var(--model-line);stroke-width:1;opacity:0;transition:opacity .6s}
+.socket .unc{opacity:0;transition:opacity .6s}
+.socket .scanline{opacity:0}
+[data-model="built"] .socket .body,[data-model="low"] .socket .body,[data-model="good"] .socket .body{fill:var(--model);stroke-dasharray:none}
+[data-model="built"] .socket .rim,[data-model="low"] .socket .rim,[data-model="good"] .socket .rim{stroke-dasharray:none}
+[data-model="built"] .socket .mesh,[data-model="low"] .socket .mesh,[data-model="good"] .socket .mesh{opacity:.5}
+[data-model="low"] .socket .unc{opacity:1}
+[data-model="good"] .socket .body{fill:var(--blue-soft);stroke:var(--blue)}
+[data-model="good"] .socket .rim{stroke:var(--blue)}
+[data-model="built"] .socket .scanline{opacity:1;animation:scan 2.2s ease-in-out 1}
+@keyframes scan{from{transform:translateY(0)}to{transform:translateY(250px)}}
+
+/* brief */
+.brief{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.item{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;transition:border-color .3s,background .3s}
+.item .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.item .lbl{font-weight:600;color:var(--ink);font-size:14px}
+.src{font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap}
+.val{font-size:13.5px;color:var(--text)}
+.st{font-family:var(--mono);font-size:11px;padding:2px 8px;border-radius:99px;white-space:nowrap}
+.item[data-s="in"] .st{background:var(--gray-soft);color:var(--text)}
+.item[data-s="wait"]{opacity:.55} .item[data-s="wait"] .st{color:var(--muted);border:1px dashed var(--line)}
+.item[data-s="missing"]{border-color:var(--coral);background:var(--coral-soft)} .item[data-s="missing"] .st{background:var(--coral);color:var(--panel)}
+.item[data-s="asked"]{border-color:var(--coral)} .item[data-s="asked"] .st{background:var(--coral-soft);color:var(--coral)}
+.item[data-s="new"]{border-color:var(--ok);background:var(--ok-soft)} .item[data-s="new"] .st{background:var(--ok);color:var(--panel)}
+.q{font-size:13px;border-left:3px solid var(--coral);padding:2px 0 2px 10px;color:var(--ink)}
+.q span{display:block;font-family:var(--mono);font-size:11px;color:var(--coral)}
+.decide{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);padding-top:12px}
+.btn{font:600 14px var(--body);border-radius:8px;padding:10px 14px;border:1.5px solid var(--blue);background:var(--blue);color:var(--panel);cursor:pointer}
+.btn:disabled{background:transparent;color:var(--muted);border-color:var(--line);cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--blue)}
+.btn:focus-visible,.step:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
+
+/* presenter */
+.presenter{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px 24px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+@media (max-width:700px){.presenter{grid-template-columns:minmax(0,1fr)}}
+.steps{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:0;padding:0}
+.step{font:500 13px var(--body);display:flex;align-items:center;gap:8px;padding:7px 12px;border-radius:99px;border:1px solid var(--line);background:var(--win);color:var(--muted);cursor:pointer}
+.step b{font-family:var(--mono);font-weight:500}
+.step[aria-current="step"]{background:var(--ink);color:var(--win);border-color:var(--ink)}
+.step.done{color:var(--ink)}
+.say{grid-column:1/-1;font-family:var(--display);font-size:clamp(19px,2.2vw,24px);color:var(--ink);line-height:1.35;margin:0;text-wrap:balance}
+.nav{display:flex;gap:8px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="page">
+  <header class="intro">
+    <div>
+      <div class="eyebrow">Artifact from 2031 · 3DEXPERIENCE platform</div>
+      <h1>SOMATIA workspace</h1>
+      <p>One prosthetic socket case, seen the way the prosthetist sees it. The design tools build and test the model. SOMATIA tracks who knows what, spots the inputs the simulation is missing, and asks the right expert before anyone iterates.</p>
+    </div>
+    <div class="hint">Use ← → to step through</div>
+  </header>
+
+  <section class="win" aria-label="SOMATIA workspace mockup">
+    <div class="bar">
+      <span class="brand">SOMATIA</span>
+      <span class="crumb">Kaiser Permanente pilot · <b>Case 0412: Connor R.</b> · transtibial socket, revision 2</span>
+      <span class="spacer"></span>
+      <span class="pill idle" id="status">Case open</span>
+    </div>
+
+    <div class="cols">
+      <aside class="col team">
+        <div class="colhead"><span>Care team</span><span id="teamcount">5 experts</span></div>
+        <ul class="people" id="people"></ul>
+        <p class="note">SOMATIA knows what each person on the case can answer. Nobody has to chase anyone.</p>
+      </aside>
+
+      <main class="col viewer">
+        <div class="colhead"><span>Model</span><span id="toolname">SOLIDWORKS</span></div>
+        <div class="stage" id="stage" data-model="empty">
+          <div class="grid"></div>
+          <span class="tool" id="tooltag">Waiting for scan</span>
+          <svg class="socket" viewBox="0 0 240 320" role="img" aria-label="Socket model">
+            <defs>
+              <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                <rect width="8" height="8" fill="var(--coral-soft)"/><line x1="0" y1="0" x2="0" y2="8" stroke="var(--coral)" stroke-width="3"/>
+              </pattern>
+              <clipPath id="sock"><path d="M40 52 C40 30 200 30 200 52 L178 250 C170 292 70 292 62 250 Z"/></clipPath>
+            </defs>
+            <path class="body" d="M40 52 C40 30 200 30 200 52 L178 250 C170 292 70 292 62 250 Z"/>
+            <g clip-path="url(#sock)">
+              <g class="mesh">
+                <line x1="0" y1="90" x2="240" y2="90"/><line x1="0" y1="130" x2="240" y2="130"/><line x1="0" y1="170" x2="240" y2="170"/><line x1="0" y1="210" x2="240" y2="210"/><line x1="0" y1="250" x2="240" y2="250"/>
+                <line x1="90" y1="0" x2="100" y2="320"/><line x1="150" y1="0" x2="140" y2="320"/>
+              </g>
+              <g class="unc">
+                <ellipse cx="120" cy="262" rx="64" ry="34" fill="url(#hatch)"/>
+                <ellipse cx="188" cy="120" rx="26" ry="46" fill="url(#hatch)"/>
+              </g>
+              <rect class="scanline" x="0" y="30" width="240" height="4" fill="var(--blue)"/>
+            </g>
+            <ellipse class="rim" cx="120" cy="52" rx="80" ry="18"/>
+          </svg>
+          <div class="marker m1" id="m1" style="opacity:0"><b>LOW CONFIDENCE</b>Lateral edge: healing status unknown</div>
+          <div class="marker m2" id="m2" style="opacity:0"><b>LOW CONFIDENCE</b>Distal end: load tolerance unknown</div>
+        </div>
+        <div class="conf">
+          <div class="row"><span>Simulation confidence</span><b id="conflabel">Not run yet</b></div>
+          <div class="meter"><i id="meter"></i></div>
+        </div>
+        <div class="colhead"><span>Activity</span></div>
+        <ul class="feed" id="feed"></ul>
+      </main>
+
+      <aside class="col">
+        <div class="colhead"><span>Design brief</span><span id="briefcount"></span></div>
+        <ul class="brief" id="brief"></ul>
+        <div class="decide">
+          <button class="btn" id="approve" disabled>Approve for test socket</button>
+          <span class="note" id="decidenote">The prosthetist makes the final call. SOMATIA never approves a design.</span>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="presenter" aria-label="Presenter controls">
+    <ol class="steps" id="steps"></ol>
+    <div class="nav">
+      <button class="btn ghost" id="prev">Back</button>
+      <button class="btn" id="next">Next</button>
+    </div>
+    <p class="say" id="say"></p>
+  </section>
+</div>
+
+<script>
+const PEOPLE = [
+  {id:"pt0", init:"CR", name:"Connor R.", role:"Patient · goals"},
+  {id:"ot", init:"OT", name:"Maya Lin", role:"Occupational therapist · daily life"},
+  {id:"pt", init:"PT", name:"Sam Ortiz", role:"Physical therapist · movement"},
+  {id:"md", init:"MD", name:"Dr. Ama Okafor", role:"Physician · healing"},
+  {id:"cp", init:"CP", name:"Jon Reyes", role:"Prosthetist · builds the design"}
+];
+const BRIEF = [
+  {id:"goal", lbl:"Daily goal", src:"Connor", val:"Walk his daughter to school and back, about 20 minutes each way"},
+  {id:"wear", lbl:"Wear time", src:"OT", val:"About 8 hours a day, with a break at midday"},
+  {id:"gait", lbl:"Gait pattern", src:"PT", val:"Short stride on the right, favors the left side"},
+  {id:"scan", lbl:"Limb scan", src:"Prosthetist", val:"Scan 03, volume down 4% since last fitting"},
+  {id:"load", lbl:"Distal load tolerance", src:"PT", val:"Not in the brief", ans:"Partial load at the distal end for 3 more weeks", q:"How much load can the distal end take right now?"},
+  {id:"heal", lbl:"Incision healing", src:"Physician", val:"Not in the brief", ans:"Healed. Keep pressure off the lateral scar until next review", q:"Is the lateral incision ready to take pressure from the socket wall?"}
+];
+const STEPS = [
+  { name:"Open the case",
+    say:"Everyone who knows something about Connor is on one case. His goal, the OT's notes and the PT's observations are already in the design brief.",
+    status:["idle","Case open"], model:"empty", tool:"Waiting for scan", toolname:"SOLIDWORKS", conf:[0,"Not run yet"],
+    people:{pt0:"done",ot:"done",pt:"done",md:"idle",cp:"active"},
+    brief:{goal:"in",wear:"in",gait:"in",scan:"wait",load:"wait",heal:"wait"},
+    feed:[["09:02","Case 0412 opened for revision 2"],["09:03","Connor's goal and OT notes linked to the brief"]] },
+  { name:"Build the model",
+    say:"The prosthetist scans the limb and builds the socket in SOLIDWORKS, the same tool he uses today. Nothing about his craft changes.",
+    status:["run","Modeling"], model:"built", tool:"SOLIDWORKS · socket rev 2", toolname:"SOLIDWORKS", conf:[0,"Not run yet"],
+    people:{pt0:"done",ot:"done",pt:"done",md:"idle",cp:"active"},
+    brief:{goal:"in",wear:"in",gait:"in",scan:"in",load:"wait",heal:"wait"},
+    feed:[["09:40","Scan 03 imported by Jon Reyes"],["10:15","Socket model rev 2 saved"]] },
+  { name:"Spot what's missing",
+    say:"SIMULIA tests the model, and SOMATIA reads the result. Two regions can't be trusted because the brief is missing inputs. It pauses the iteration instead of guessing.",
+    status:["hold","Iteration paused"], model:"low", tool:"SIMULIA · load test", toolname:"SIMULIA", conf:[38,"Low · 2 inputs missing"],
+    people:{pt0:"done",ot:"done",pt:"done",md:"idle",cp:"active"},
+    brief:{goal:"in",wear:"in",gait:"in",scan:"in",load:"missing",heal:"missing"},
+    feed:[["10:22","Load test run in SIMULIA"],["10:22","Low confidence at distal end and lateral edge"],["10:23","Iteration paused: 2 inputs missing from the brief"]] },
+  { name:"Ask the right expert",
+    say:"SOMATIA knows who can answer each gap. The PT and the physician each get one specific question, with the model attached.",
+    status:["hold","Waiting on 2 experts"], model:"low", tool:"SIMULIA · load test", toolname:"SIMULIA", conf:[38,"Low · 2 questions sent"],
+    people:{pt0:"done",ot:"done",pt:"asked",md:"asked",cp:"active"},
+    brief:{goal:"in",wear:"in",gait:"in",scan:"in",load:"asked",heal:"asked"},
+    feed:[["10:24","Question sent to Sam Ortiz, PT"],["10:24","Question sent to Dr. Ama Okafor"]] },
+  { name:"Test again, then decide",
+    say:"The answers go straight into the brief. The model is tested again before anything is made, and the prosthetist decides what happens next.",
+    status:["ok","Ready for review"], model:"good", tool:"SIMULIA · load test, run 2", toolname:"SIMULIA", conf:[92,"High · brief complete"],
+    people:{pt0:"done",ot:"done",pt:"answered",md:"answered",cp:"active"},
+    brief:{goal:"in",wear:"in",gait:"in",scan:"in",load:"new",heal:"new"},
+    feed:[["11:05","Sam Ortiz answered: distal load"],["13:40","Dr. Okafor answered: incision healing"],["13:41","Brief updated, load test run 2"],["13:43","Confidence high. Sent to Jon Reyes for review"]] }
+];
+const STLABEL = {in:"In brief", wait:"Pending", missing:"Missing", asked:"Asked", new:"Answered"};
+
+const $ = id => document.getElementById(id);
+let cur = 0;
+
+function render(i, animate){
+  const s = STEPS[i];
+  // steps
+  $("steps").innerHTML = STEPS.map((x,k)=>`<li><button class="step ${k<i?"done":""}" data-k="${k}" ${k===i?'aria-current="step"':""}><b>${k+1}</b>${x.name}</button></li>`).join("");
+  $("steps").querySelectorAll("button").forEach(b=>b.onclick=()=>go(+b.dataset.k));
+  $("say").textContent = s.say;
+  $("prev").disabled = i===0; $("next").disabled = i===STEPS.length-1;
+  // status
+  $("status").className = "pill "+s.status[0]; $("status").textContent = s.status[1];
+  // team
+  $("people").innerHTML = PEOPLE.map(p=>{
+    const st = s.people[p.id];
+    const tag = st==="asked" ? "Question waiting" : st==="answered" ? "Answered" : "";
+    return `<li class="person" data-s="${st}"><span class="av">${p.init}</span><span><span class="nm">${p.name}</span><br><span class="rl">${tag||p.role}</span></span><span class="dot" aria-hidden="true"></span></li>`;
+  }).join("");
+  // model
+  const stage = $("stage");
+  stage.dataset.model = "empty"; void stage.offsetWidth; stage.dataset.model = s.model;
+  $("tooltag").textContent = s.tool; $("toolname").textContent = s.toolname;
+  $("m1").style.opacity = s.model==="low" ? 1 : 0; $("m2").style.opacity = s.model==="low" ? 1 : 0;
+  $("meter").style.width = s.conf[0]+"%";
+  $("meter").style.background = s.conf[0]>80 ? "var(--ok)" : s.conf[0]>0 ? "var(--coral)" : "var(--model-line)";
+  $("conflabel").textContent = s.conf[1];
+  // feed (cumulative)
+  const all = STEPS.slice(0,i+1).flatMap((x,k)=>x.feed.map(f=>[...f,k===i]));
+  $("feed").innerHTML = all.slice(-5).reverse().map(([t,m,n])=>`<li class="${n&&animate?"new":""}"><time>${t}</time><span>${m}</span></li>`).join("");
+  // brief
+  let have = 0;
+  $("brief").innerHTML = BRIEF.map(b=>{
+    const st = s.brief[b.id];
+    if(st==="in"||st==="new") have++;
+    let val = st==="wait" ? "Not yet added" : (st==="new" ? b.ans : b.val);
+    let extra = st==="asked" ? `<div class="q"><span>Sent to ${b.src==="PT"?"Sam Ortiz, PT":"Dr. Ama Okafor"}</span>${b.q}</div>` : "";
+    if(st==="missing") val = "Needed for the simulation. Not in the brief yet.";
+    return `<li class="item" data-s="${st}"><div class="top"><span class="lbl">${b.lbl}</span><span class="st">${STLABEL[st]}</span></div><div class="val">${val}</div><span class="src">From ${b.src}</span>${extra}</li>`;
+  }).join("");
+  $("briefcount").textContent = have+" of "+BRIEF.length+" inputs";
+  // decision
+  const ready = i===STEPS.length-1;
+  $("approve").disabled = !ready; $("approve").textContent = "Approve for test socket";
+  $("decidenote").textContent = ready ? "Ready for Jon Reyes. The prosthetist makes the final call." : "The prosthetist makes the final call. SOMATIA never approves a design.";
+}
+function go(i){ cur = Math.max(0,Math.min(STEPS.length-1,i)); render(cur,true); }
+$("next").onclick=()=>go(cur+1); $("prev").onclick=()=>go(cur-1);
+$("approve").onclick=()=>{ $("approve").textContent="Approved by Jon Reyes"; $("approve").disabled=true; $("decidenote").textContent="Test socket queued for fabrication. Connor tries it on at his next visit."; $("status").className="pill ok"; $("status").textContent="Approved"; };
+document.addEventListener("keydown",e=>{ if(e.target.closest("input,textarea")) return; if(e.key==="ArrowRight") go(cur+1); if(e.key==="ArrowLeft") go(cur-1); });
+render(0,false);
+</script>
+
+</body></html>

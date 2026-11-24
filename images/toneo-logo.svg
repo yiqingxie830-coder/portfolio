@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 430 160" width="430" height="160" role="img" aria-label="Toneo">
+  <defs>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="5" />
+    </filter>
+    <radialGradient id="body" cx="45%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#3a3a3e" />
+      <stop offset="100%" stop-color="#232326" />
+    </radialGradient>
+  </defs>
+
+  <!-- 小黑团：轻轻上下浮动，落下时稍微压扁 -->
+  <g>
+    <animateTransform attributeName="transform" type="translate"
+      values="0 0; 0 -4; 0 0; 0 0" keyTimes="0; 0.35; 0.7; 1"
+      dur="3.2s" repeatCount="indefinite"
+      calcMode="spline" keySplines="0.45 0 0.55 1; 0.45 0 0.55 1; 0 0 1 1" />
+    <g transform="translate(84 82)">
+      <g>
+        <animateTransform attributeName="transform" type="scale"
+          values="1 1; 1 1; 1.03 0.97; 1 1; 1 1" keyTimes="0; 0.6; 0.7; 0.8; 1"
+          dur="3.2s" repeatCount="indefinite" />
+        <circle r="58" fill="url(#body)" filter="url(#soft)" />
+
+        <!-- 眼睛：左右看 -->
+        <g>
+          <animateTransform attributeName="transform" type="translate"
+            values="0 0; 0 0; -8 1; -8 1; 0 0; 0 0; 8 1; 8 1; 0 0; 0 0"
+            keyTimes="0; 0.12; 0.18; 0.32; 0.38; 0.52; 0.58; 0.72; 0.78; 1"
+            dur="6s" repeatCount="indefinite" />
+          <!-- 眨眼：眼睛快速压扁再恢复 -->
+          <g transform="translate(0 8)">
+            <g>
+              <animateTransform attributeName="transform" type="scale"
+                values="1 1; 1 1; 1 0.1; 1 1; 1 1; 1 0.1; 1 1; 1 1"
+                keyTimes="0; 0.4; 0.43; 0.46; 0.9; 0.93; 0.96; 1"
+                dur="6s" repeatCount="indefinite" />
+              <ellipse cx="-24" cy="0" rx="7.5" ry="13.5" fill="#fff" />
+              <ellipse cx="24" cy="0" rx="7.5" ry="13.5" fill="#fff" />
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+
+  <text x="168" y="108" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+    font-size="78" font-weight="800" letter-spacing="-2" fill="#1a1a1c">Toneo</text>
+</svg>
